@@ -1,128 +1,183 @@
-﻿using System.Reflection.Metadata;
-using System.Text;
-
-namespace src;
-
-class Grid
-{
-    public static string q = " ", w = " ", e = " ";
-    public static string a = " ", s = " ", d = " ";
-    public static string z = " ", x = " ", c = " ";
-
-    /// <summary>
-    /// <c>
-    /// <para>| | | |</para>
-    /// <para>| | | |</para>
-    /// <para>| | | |</para>
-    /// </c>
-    /// </summary>
-    public static void PrintGrid(string scelta)
-    {
-        q = scelta;
-        string grid = "";
-        grid += $"[{q}|{w}|{e}]\n";
-        grid += $"[{a}|{s}|{d}]\n";
-        grid += $"[{z}|{x}|{c}]\n";
-        Console.WriteLine($"{grid}");
-    }
-
-
-}
-
+﻿namespace src;
+/// <summary>
+///   ____ ___  _   _ ____   ___  _     _____           _____ ____  ___ ____  
+///  / ___/ _ \| \ | / ___| / _ \| |   | ____|         |_   _|  _ \|_ _/ ___| 
+/// | |  | | | |  \| \___ \| | | | |   |  _|    _____    | | | |_) || |\___ \
+/// | |__| |_| | |\  |___) | |_| | |___| |___  |_____|   | | |  _ < | | ___) |
+///  \____\___/|_| \_|____/ \___/|_____|_____|           |_| |_| \_\___|____/
+/// </summary>
 class Program
 {
+    private const char SYMBOL_PLAYER1 = 'x';
+    private const char SYMBOL_PLAYER2 = 'O';
+
+    /// <summary>
+    /// Game Logic
+    /// until we have a won, ask players to insert the input inside the Grid
+    /// </summary>
+    /// <param name="args"></param>
     static void Main(string[] args)
     {
-        Grid.PrintGrid("x");
+        Console.WriteLine($"HOW TO PLAY - use the keys as follow to play");
+        Console.WriteLine($"[q, w, e]");
+        Console.WriteLine($"[a, s, d]");
+        Console.WriteLine($"[z, x, c]");
+        Console.WriteLine($"PRESS ANY KEY TO PLAY");
+        Console.ReadLine();
 
-        Console.WriteLine($"il valore di grid salvato e': {Grid.q}");
+        Console.Clear();
+        Grid grid = new Grid();
+
+        grid.PrintGrid(' ', ' ');
+
+        char inputPlayer = ' ';
+        int play = 1;
+        char symbol = ' ';
+        do
+        {
+            if (play == 1)
+            {
+                symbol = SYMBOL_PLAYER1;
+                play = 2;
+                Console.WriteLine($"Player 1 choose: ");
+                inputPlayer = InputPlayer();
+                Console.Clear();
+                grid.PrintGrid(inputPlayer, symbol); // print player1 choice
+            }
+            else
+            {
+                play = 1;
+                symbol = SYMBOL_PLAYER2;
+                Console.WriteLine($"Player 2 choose: ");
+                inputPlayer = InputPlayer();
+                Console.Clear();
+                grid.PrintGrid(inputPlayer, symbol); // print player2 choice
+            }
+        } while (!CheckWin(inputPlayer));
+        if (symbol == SYMBOL_PLAYER1)
+            Console.WriteLine($"Player 1 won the game");
+        else
+            Console.WriteLine($"Player 2 won the game");
+        Console.WriteLine($"do you want to play again? [Y/n]");
+        string choice = Console.ReadLine() ?? "";
+        if (choice.ToLower() == "n")
+        {
+            Environment.Exit(1);
+        } else
+        {
+            Grid.ResetGrid();
+            Main(null!);
+        }
         
-        // itero la cosa fino a quando non arrivo a 9 mosse
-        // recupero la posizione mappata del giocatore 1
-
-        // recupero la posizione mappata del giocatore 2
-        // ad ogni mossa controllo se ci sta vincita
-    }
-
-
-
-    /// <summary>
-    /// <c>
-    /// <para>q w e (00) (01) (02)</para>
-    /// <para>a s d (10) (11) (12)</para>
-    /// <para>z x c (20) (21) (22)</para>
-    /// <para>Usage: PositionGrid('w') --> (01)</para></c>
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    static int[] PositionGrid(char key)
-    {
-        return null;
     }
 
     /// <summary>
-    /// possible wins pos (00)
-    /// 
+    /// <para>require player input and check if the value is already inserted on the Grid</para>
+    /// <para>HOW TO PLAY - use the keys as follow to play</para>
     /// <c>
-    /// <para>|x| | | ___ |x|x|x| ___ |x| | | ___ |x| | |</para>
-    /// <para>| | | | ___ | | | | ___ |x| | | ___ | |x| |</para>
-    /// <para>| | | | ___ | | | | ___ |x| | | ___ | | |x|</para>
-    /// </c>
-    /// possible wins pos (01)
-    /// <c>
-    /// <para>| |x| | ___ |x|x|x| ___ | |x| |</para>
-    /// <para>| | | | ___ | | | | ___ | |x| |</para>
-    /// <para>| | | | ___ | | | | ___ | |x| |</para>
-    /// </c>
-    /// possible wins pos (02)
-    /// <c>
-    /// <para>| | |x| ___ |x|x|x| ___ | | |x| ___ | | |x|</para>
-    /// <para>| | | | ___ | | | | ___ | |x| | ___ | | |x|</para>
-    /// <para>| | | | ___ | | | | ___ |x| | | ___ | | |x|</para>
-    /// </c>
-    /// possible wins pos (10)
-    /// <c>
-    /// <para>| | | | ___ |x| | | ___ | | | |</para>
-    /// <para>|x| | | ___ |x| | | ___ |x|x|x|</para>
-    /// <para>| | | | ___ |x| | | ___ | | | |</para>
-    /// </c>
-    /// possible wins pos (11)
-    /// <c>
-    /// <para>| | | | ___ | | | | ___ | |x| | ___ | | |x| ___ |x| | |</para>
-    /// <para>| |x| | ___ |x|x|x| ___ | |x| | ___ | |x| | ___ | |x| |</para>
-    /// <para>| | | | ___ | | | | ___ | |x| | ___ |x| | | ___ | | |x|</para>
-    /// </c>
-    /// possible wins pos (12)
-    /// <c>
-    /// <para>| | | | ___ | | |x| ___ | | | |</para>
-    /// <para>| | |x| ___ | | |x| ___ |x|x|x|</para>
-    /// <para>| | | | ___ | | |x| ___ | | | |</para>
-    /// </c>
-    /// possible wins pos (20)
-    /// <c>
-    /// <para>| | | | ___ |x| | | ___ | | | | ___ | | |x|</para>
-    /// <para>| | | | ___ |x| | | ___ | | | | ___ | |x| |</para>
-    /// <para>|x| | | ___ |x| | | ___ |x|x|x| ___ |x| | |</para>
-    /// </c>
-    /// possible wins pos (21)
-    /// <c>
-    /// <para>| | | | ___ | |x| | ___ | | | |</para>
-    /// <para>| | | | ___ | |x| | ___ | | | |</para>
-    /// <para>| |x| | ___ | |x| | ___ |x|x|x|</para>
-    /// </c>
-    /// possible wins pos (22)
-    /// <c>
-    /// <para>| | | | ___ | | |x| ___ | | | | ___ |x| | |</para>
-    /// <para>| | | | ___ | | |x| ___ | | | | ___ | |x| |</para>
-    /// <para>| | |x| ___ | | |x| ___ |x|x|x| ___ | | |x|</para>
+    /// <para>[q, w, e]</para>
+    /// <para>[a, s, d]</para>
+    /// <para>[z, x, c]</para>
     /// </c>
     /// </summary>
-    /// <returns></returns>
-    static bool checkWin(int[] posizione, string player)
+    /// <param name="input"></param>
+    /// <returns>player input</returns>
+    static char InputPlayer()
     {
-        return true;
+        char input = ' ';
+        bool valid = false;
+
+        while (!valid)
+        {
+            input = Convert.ToChar(Console.ReadLine() ?? "");
+            // if already exist we skip all other cases check
+            valid = !Grid.SymbolAlreadyExist(input);
+
+            // check if the input is valid
+            switch (input, valid)
+            {
+                case ('q', true):
+                case ('w', true):
+                case ('e', true):
+                case ('a', true):
+                case ('s', true):
+                case ('d', true):
+                case ('z', true):
+                case ('x', true):
+                case ('c', true):
+                    valid = true;
+                    break;
+                default:
+                    valid = false;
+                    string warning = "Attenzione! non valido, riprova:";
+                    Console.WriteLine(warning);
+                    break;
+            }
+        }
+        return input;
     }
 
+    /// <summary>
+    /// for every player input we check if he has won
+    /// </summary>
+    /// <returns>true if he has won, false otherwhise</returns>
+    static bool CheckWin(char choice)
+    {
+        bool won = false;
 
+        /// <para>|x|x|x| ___ | | | | ___ | | | |</para>
+        /// <para>| | | | ___ |x|x|x| ___ | | | |</para>
+        /// <para>| | | | ___ | | | | ___ |x|x|x|</para>
+        bool upHorizontal = Grid.q == Grid.w && Grid.w == Grid.e;
+        bool midHorizontal = Grid.a == Grid.s && Grid.s == Grid.d;
+        bool downHorizontal = Grid.z == Grid.x && Grid.x == Grid.c;
 
+        /// <para>|x| | | ___ | |x| | ___ | | |x|</para>
+        /// <para>|x| | | ___ | |x| | ___ | | |x|</para>
+        /// <para>|x| | | ___ | |x| | ___ | | |x|</para>
+        bool leftVertical = Grid.q == Grid.a && Grid.a == Grid.z;
+        bool midVertical = Grid.w == Grid.s && Grid.s == Grid.x;
+        bool rightVertical = Grid.e == Grid.d && Grid.d == Grid.c;
+
+        /// <para>|x| | | ___ | | |x|</para>
+        /// <para>| |x| | ___ | |x| |</para>
+        /// <para>| | |x| ___ |x| | |</para>
+        bool decreaseDiagonal = Grid.q == Grid.s && Grid.s == Grid.c;
+        bool increaseDiagonal = Grid.z == Grid.s && Grid.s == Grid.e;
+
+        switch (choice)
+        {
+            case 'q':
+                won = upHorizontal || leftVertical || decreaseDiagonal;
+                break;
+            case 'w':
+                won = upHorizontal || midVertical;
+                break;
+            case 'e':
+                won = rightVertical || upHorizontal || increaseDiagonal;
+                break;
+            case 'a':
+                won = leftVertical || midHorizontal;
+                break;
+            case 's':
+                won = increaseDiagonal || decreaseDiagonal || midHorizontal || midVertical;
+                break;
+            case 'd':
+                won = rightVertical || midHorizontal;
+                break;
+            case 'z':
+                won = leftVertical || increaseDiagonal || downHorizontal;
+                break;
+            case 'x':
+                won = downHorizontal || midVertical;
+                break;
+            case 'c':
+                won = rightVertical || decreaseDiagonal || downHorizontal;
+                break;
+
+            default:
+                break;
+        }
+        return won;
+    }
 }

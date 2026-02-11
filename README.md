@@ -2,7 +2,7 @@
 
 ## Games working on
 
-- Tris ( see branch `tris` )
+- Tris ( see branch `console-tris` )
 - Battaglia Navale
 - Tetris
 - Forza Quattro
