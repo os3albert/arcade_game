@@ -89,7 +89,7 @@ class Program
 
         while (!valid)
         {
-            input = Convert.ToChar(Console.ReadLine() ?? "");
+            input = Console.ReadKey().KeyChar;
             // if already exist we skip all other cases check
             valid = !Grid.SymbolAlreadyExist(input);
 
