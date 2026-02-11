@@ -3,7 +3,7 @@
 ## Games working on
 
 - Tris ( see branch `console-tris` )
-- Battaglia Navale
+- Battaglia Navale (working on)
 - Tetris
 - Forza Quattro
 - Murlan
