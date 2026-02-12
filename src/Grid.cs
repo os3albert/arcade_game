@@ -90,4 +90,18 @@ class Grid
         a = ' '; s = ' '; d = ' ';
         z = ' '; x = ' '; c = ' ';
     }
+
+    public static bool IsFull()
+    {
+        return !string.IsNullOrWhiteSpace(Convert.ToString(q)) &&
+        !string.IsNullOrWhiteSpace(Convert.ToString(w)) &&
+        !string.IsNullOrWhiteSpace(Convert.ToString(e)) &&
+        !string.IsNullOrWhiteSpace(Convert.ToString(a)) &&
+        !string.IsNullOrWhiteSpace(Convert.ToString(s)) &&
+        !string.IsNullOrWhiteSpace(Convert.ToString(d)) &&
+        !string.IsNullOrWhiteSpace(Convert.ToString(z)) &&
+        !string.IsNullOrWhiteSpace(Convert.ToString(x)) &&
+        !string.IsNullOrWhiteSpace(Convert.ToString(c));
+    }
+
 }

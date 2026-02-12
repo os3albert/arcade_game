@@ -33,6 +33,7 @@ class Program
         char inputPlayer = ' ';
         int play = 1;
         char symbol = ' ';
+        bool won = false;
         do
         {
             if (play == 1)
@@ -53,22 +54,31 @@ class Program
                 Console.Clear();
                 grid.PrintGrid(inputPlayer, symbol); // print player2 choice
             }
-        } while (!CheckWin(inputPlayer));
-        if (symbol == SYMBOL_PLAYER1)
-            Console.WriteLine($"Player 1 won the game");
-        else
-            Console.WriteLine($"Player 2 won the game");
+            won = CheckWin(inputPlayer);
+        } while (!won && !Grid.IsFull());
+
+        if (won)
+        {
+            if (symbol == SYMBOL_PLAYER1)
+                Console.WriteLine($"Player 1 won the game");
+            else
+                Console.WriteLine($"Player 2 won the game");
+        } else
+        {
+            Console.WriteLine($"Noone had won!");
+        }
+
         Console.WriteLine($"do you want to play again? [Y/n]");
         string choice = Console.ReadLine() ?? "";
         if (choice.ToLower() == "n")
         {
             Environment.Exit(1);
-        } else
+        }
+        else
         {
             Grid.ResetGrid();
             Main(null!);
         }
-        
     }
 
     /// <summary>
